@@ -37,9 +37,12 @@ positions.scraping = async (req, res) => {
   const python = await (0, _scrapping.runPythonScript)();
   console.log('python', python);
   const data = await (0, _scrapping.filterData)();
+  const today = (0, _moment.default)().format('YYYY-MM-DD');
+  console.log('moment-===', (0, _moment.default)().format('YYYY MM DD, h:mm:ss a'));
   if (process.env.IS_SAME_ORIGIN === 'true') {
     let data1 = await _position.positionModel.create({
-      text: JSON.stringify(data)
+      text: JSON.stringify(data),
+      date: today
     });
     return res.status(_httpStatus.httpStatus.CREATED).json({
       status: 'ok',
@@ -47,7 +50,8 @@ positions.scraping = async (req, res) => {
     });
   } else {
     const response = await _axios.default.post(process.env.DOC_POST_API, {
-      text: JSON.stringify(data)
+      text: JSON.stringify(data),
+      date: today
     });
     return res.json({
       status: 'ok',

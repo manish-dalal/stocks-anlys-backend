@@ -13,6 +13,10 @@ const positionSchema = new Schema({
   text: {
     type: String,
     required: true
+  },
+  date: {
+    type: Date,
+    required: true
   }
 }, {
   timestamps: true

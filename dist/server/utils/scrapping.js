@@ -10,7 +10,7 @@ var _child_process = require("child_process");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const IGNORE_LIST = ['MIDCPNIFTY', 'FINNIFTY', 'BANKNIFTY', 'NIFTYNXT50', 'NIFTY'];
 const MIN_OI_CHANGE = 0.1;
-const MIN_CHANGE = 2;
+const MIN_CHANGE = 0.5;
 const gainerFileName1 = './scrap-data/g1.csv';
 const gainerFileName2 = './scrap-data/g2.csv';
 const gainerFileName3 = './scrap-data/g3.csv';
@@ -43,7 +43,18 @@ const filterData = async () => {
     };
   }, {});
   const filteredOiData = oiData.filter(e => parseFloat(e['%chng in OI']) >= MIN_OI_CHANGE && !IGNORE_LIST.includes(e['Symbol']));
-  return filteredOiData.filter(item => allStocksMap[item['Symbol']]);
+  const finalData = [];
+  filteredOiData.forEach((item, index) => {
+    const glItem = allStocksMap[item['Symbol']];
+    if (glItem) {
+      finalData.push({
+        Symbol: item['Symbol'],
+        '%chng': glItem['%chng'],
+        '%chng in OI': item['%chng in OI']
+      });
+    }
+  });
+  return finalData;
 };
 exports.filterData = filterData;
 const runPythonScript = () => new Promise(async (resolve, reject) => {
