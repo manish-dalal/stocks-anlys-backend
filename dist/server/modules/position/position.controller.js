@@ -15,13 +15,8 @@ positions.index = async (req, res) => {
   const {
     date = '2024-06-21'
   } = req.query;
-  const startDate = (0, _moment.default)(date).startOf('day');
-  const endDate = (0, _moment.default)(date).endOf('day');
   let positions = await _position.positionModel.find({
-    createdAt: {
-      $gte: startDate,
-      $lt: endDate
-    }
+    date
   });
   return res.json({
     positions
@@ -38,7 +33,6 @@ positions.scraping = async (req, res) => {
   console.log('python', python);
   const data = await (0, _scrapping.filterData)();
   const today = (0, _moment.default)().format('YYYY-MM-DD');
-  console.log('moment-===', (0, _moment.default)().format('YYYY MM DD, h:mm:ss a'));
   if (process.env.IS_SAME_ORIGIN === 'true') {
     let data1 = await _position.positionModel.create({
       text: JSON.stringify(data),

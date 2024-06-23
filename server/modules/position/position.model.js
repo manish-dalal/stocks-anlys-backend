@@ -4,7 +4,7 @@ const { Schema } = mongoose
 const positionSchema = new Schema(
   {
     text: { type: String, required: true },
-    date: { type: Date, required: true }
+    date: { type: String, required: true }
   },
   { timestamps: true }
 )

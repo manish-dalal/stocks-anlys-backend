@@ -7,10 +7,8 @@ import { runPythonScript, filterData } from '../../utils/scrapping'
 const positions = {}
 positions.index = async (req, res) => {
   const { date = '2024-06-21' } = req.query
-  const startDate = moment(date).startOf('day')
-  const endDate = moment(date).endOf('day')
 
-  let positions = await positionModel.find({ createdAt: { $gte: startDate, $lt: endDate } })
+  let positions = await positionModel.find({ date })
   return res.json({ positions })
 }
 
@@ -24,7 +22,6 @@ positions.scraping = async (req, res) => {
   console.log('python', python)
   const data = await filterData()
   const today = moment().format('YYYY-MM-DD')
-  console.log('moment-===', moment().format('YYYY MM DD, h:mm:ss a'))
 
   if (process.env.IS_SAME_ORIGIN === 'true') {
     let data1 = await positionModel.create({ text: JSON.stringify(data), date: today })
