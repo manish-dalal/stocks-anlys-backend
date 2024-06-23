@@ -23,12 +23,14 @@ positions.scraping = async (req, res) => {
   const python = await runPythonScript()
   console.log('python', python)
   const data = await filterData()
+  const today = moment().format('YYYY-MM-DD')
+  console.log('moment-===', moment().format('YYYY MM DD, h:mm:ss a'))
 
   if (process.env.IS_SAME_ORIGIN === 'true') {
-    let data1 = await positionModel.create({ text: JSON.stringify(data) })
+    let data1 = await positionModel.create({ text: JSON.stringify(data), date: today })
     return res.status(httpStatus.CREATED).json({ status: 'ok', data1 })
   } else {
-    const response = await axios.post(process.env.DOC_POST_API, { text: JSON.stringify(data) })
+    const response = await axios.post(process.env.DOC_POST_API, { text: JSON.stringify(data), date: today })
     return res.json({ status: 'ok', data: response.data.data })
   }
 }

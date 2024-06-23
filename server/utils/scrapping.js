@@ -42,8 +42,19 @@ export const filterData = async () => {
   const filteredOiData = oiData.filter(
     (e) => parseFloat(e['%chng in OI']) >= MIN_OI_CHANGE && !IGNORE_LIST.includes(e['Symbol'])
   )
+  const finalData = []
+  filteredOiData.forEach((item, index) => {
+    const glItem = allStocksMap[item['Symbol']]
+    if (glItem) {
+      finalData.push({
+        Symbol: item['Symbol'],
+        '%chng': glItem['%chng'],
+        '%chng in OI': item['%chng in OI']
+      })
+    }
+  })
 
-  return filteredOiData.filter((item) => allStocksMap[item['Symbol']])
+  return finalData
 }
 
 export const runPythonScript = () =>
