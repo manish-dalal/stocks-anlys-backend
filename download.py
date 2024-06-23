@@ -28,6 +28,7 @@ def fetch_save(url, name):
     f.close()
 
 
+print('Hello    python')
 fetch_save(
     "https://www.nseindia.com/api/live-analysis-variations?index=loosers&type=FOSec&csv=true",
     "l3.csv",

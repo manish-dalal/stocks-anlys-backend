@@ -1,7 +1,8 @@
 import moment from 'moment'
-import { spawn } from 'child_process'
+import axios from 'axios'
 import { positionModel } from './position.model'
 import { httpStatus } from '../../utils/httpStatus'
+import { runPythonScript, filterData } from '../../utils/scrapping'
 
 const positions = {}
 positions.index = async (req, res) => {
@@ -19,23 +20,17 @@ positions.create = async (req, res) => {
 }
 
 positions.scraping = async (req, res) => {
-  const python = spawn('python', ['download.py'])
-  let largeDataSet = []
+  const python = await runPythonScript()
+  console.log('python', python)
+  const data = await filterData()
 
-  // collect data from script
-  python.stdout.on('data', function (data) {
-    console.log('Pipe data from python script ...')
-    largeDataSet.push(data)
-  })
-
-  // in close event we are sure that stream is from child process is closed
-  python.on('close', (code) => {
-    console.log(`child process close all stdio with code ${code}`)
-    // send data to browser
-    return res.send(largeDataSet.join(''))
-  })
-
-  return res.json({ status: 'ok' })
+  if (process.env.IS_SAME_ORIGIN === 'true') {
+    let data1 = await positionModel.create({ text: JSON.stringify(data) })
+    return res.status(httpStatus.CREATED).json({ status: 'ok', data1 })
+  } else {
+    const response = await axios.post(process.env.DOC_POST_API, { text: JSON.stringify(data) })
+    return res.json({ status: 'ok', data: response.data.data })
+  }
 }
 
 export { positions }
