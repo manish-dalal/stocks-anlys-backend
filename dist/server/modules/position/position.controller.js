@@ -21,10 +21,6 @@ positions.index = async (req, res) => {
     _id: 0,
     text: 1,
     createdAt: 1
-  }, {
-    sort: {
-      createdAt: -1
-    }
   });
   return res.json({
     positions
