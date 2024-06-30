@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: bun
+    runtime: node
+    env: docker
+    repo: https://github.com/manish-dalal/stocks-anlys-backend
+    plan: starter
+    autoDeploy: false
+    image:
+      url: nikolaik/python-nodejs:latest
