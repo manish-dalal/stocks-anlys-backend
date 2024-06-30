@@ -12,7 +12,7 @@ headers = {
 
 r = session.get(base_url, headers=headers, timeout=15)
 cookies = dict(r.cookies)
-
+print(r.cookies)
 
 def fetch_save(url, name):
     response = session.get(
