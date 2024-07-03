@@ -4,6 +4,6 @@ RUN mkdir -p /home/pn/app/node_modules && chown -R pn:pn /home/pn/app
 WORKDIR /home/pn/app
 COPY package*.json ./
 COPY --chown=pn:pn . .
-RUN npm install && pip install requests && python download.py
+RUN npm install && pip install requests
 EXPOSE 4000
 CMD [ "npm", "start" ]
